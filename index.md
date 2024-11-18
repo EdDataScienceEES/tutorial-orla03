@@ -1,4 +1,6 @@
-<center><img src="{{ site.baseurl }}/images/conf.png" alt="Img" width="50"></center>
+# Intro to Confidence Intervals in R
+
+<center><img src="{{ site.baseurl }}/images/conf.png" alt="Img" width="250"></center>
 
 ### Tutorial Aims
 
@@ -31,39 +33,44 @@ This tutorial is suitable for beginner data scientists, seeking to find out abou
 Having an understanding of how to efficiently lay out your code and maintain a well commented script will prove beneficial to gauge a better understanding of the skills required for this tutorial. Please ensure you have completed the following tutorials prior to this tutorial, as this will enhance your understanding of the concepts underlining confidence and predictions within a model! 
 
 The following tutorials may be useful:
-#### <a href="(https://ourcodingclub.github.io/tutorials/intro-to-r/)"> 1. Getting Started with R </a>
+#### <a href="https://ourcodingclub.github.io/tutorials/intro-to-r/"> 1. Getting Started with R </a>
 #### <a href="https://ourcodingclub.github.io/tutorials/model-design/"> 2. Intro to Model Design</a>
-#### <a href="(https://ourcodingclub.github.io/tutorials/etiquette/)"> 3. Coding Etiquette</a>
+#### <a href="https://ourcodingclub.github.io/tutorials/etiquette/"> 3. Coding Etiquette</a>
 
 You can get all of the resources for this tutorial from <a href="https://github.com/EdDataScienceEES/tutorial-orla03" target="_blank">this GitHub repository</a>. Clone and download the repo as a zip file, then unzip it.
 
-Having a basic understanding of `ggplot2` will be super beneficial!
+Having a basic understanding of `ggplot2` will be super beneficial. However, do not worry if you are only a beginner with R language, we will address each step as we make our way through this tutorial.
+
+The data we will be using to begin with is a dataset built into the `ggplot2` library in R.
+Let's load the package and get a basic understanding of the data.
 
 ```r
-# Set the working directory
-setwd("your_filepath")
-
-# Load packages
+# Load package
 library(ggplot2)
-library(dplyr)
+
+# If you don't have the package installed already, do so by uncommenting the code below
+# install.packages("ggplot2")
+# This line of code is essential for installing any packages you don't have already!
+
+# Loading data
+data(trees)
+# Note: the data will now appear as `trees` in your R Studio environment.
 ```
+
+We will now begin through this tutorial.
 
 <a name="section2"></a>
 
 ## 2. Learning how to use linear models and find their confidence intervals.
 
 We will begin by constructing a simple linear model for the `trees` data and subsequently 
-constucting relevant confidence intervals.
+constructing relevant confidence intervals. Our aim here is to investigate the correlation between tree girth and tree height. 
+
+Before we begin, recall that a simple linear model is built via the response variable being predicted by the predictor.
 
 ```r
-# Loading data
-data(trees)
-
-# Build a linear model for trees  
-plot(Girth ~ Height, data = trees)
-
-model <- lm(Girth ~ Height, data = trees) # Constuct a simple lm model
-summary(model) # Print the summary of our model
+# Constuct a simple linear model 
+model <- lm(Girth ~ Height, data = trees) 
 ```
 
 Recall from our previous tutorial, we must check there are no violation of the assumptions
@@ -71,10 +78,19 @@ Recall from our previous tutorial, we must check there are no violation of the a
 
 ```r
 # Plot to check no violation of assumptions
-par(mfrow = c(2,2))
+par(mfrow = c(2,2)) # plots the four plots on one panel
 plot(model)
 # seems okay no clear violation!
 ```
+
+<center> <img src="{{ site.baseurl }}/figures/model_1.png" alt="Img" style="width: 800px;"/> </center>
+
+
+```r
+summary(model) # Print the summary of our model
+```
+We will begin by gaining a basic understanding of why the summary is useful for later in the tutorial. 
+
 
 We can now plot the linear model as follows.
 
@@ -83,6 +99,8 @@ plot(Girth ~ Height, data = trees)
 abline(model)
 
 ```
+<center> <img src="{{ site.baseurl }}/figures/model_2.png" alt="Img" style="width: 800px;"/> </center>
+
 
 We will now find Confidence intervals for our model.
 R has a built in function to find confidence intervals, however we will manually find these intervals and then test against the function
@@ -139,18 +157,8 @@ confint(model, level=0.95)
 
 
 
-```r
-xy_fil <- xy %>%  # Create object with the contents of `xy`
-	filter(x_dat < 7.5)  # Keep rows where `x_dat` is less than 7.5
-```
-
 And finally, plot the data:
 
-```r
-ggplot(data = xy_fil, aes(x = x_dat, y = y_dat)) +  # Select the data to use
-	geom_point() +  # Draw scatter points
-	geom_smooth(method = "loess")  # Draw a loess curve
-```
 
 At this point it would be a good idea to include an image of what the plot is meant to look like so students can check they've done it right. Replace `IMAGE_NAME.png` with your own image file:
 
@@ -185,6 +193,7 @@ ggplot(data = coef_data) +
        y = "Estimate")
 
 ```
+<center> <img src="{{ site.baseurl }}/figures/Conf-Int.png" alt="Img" style="width: 800px;"/> </center>
 
 Have a think, what kind of confidence intervals do we want?
 **show answer 
@@ -215,6 +224,7 @@ ggplot(data = pred_m) +
        x = "Height", 
        y = "Prediction")
 ```
+<center> <img src="{{ site.baseurl }}/figures/Conf-Int-2.png" alt="Img" style="width: 800px;"/> </center>
 
 We may now ask but what is the difference between a confidence interval and a prediction interval?
 Good question, lets find out!
@@ -254,6 +264,8 @@ ggplot(combined, aes(x = Height,
   geom_line(aes(y = upr), col = "red", linetype = "dashed") #upper prediction interval
 
 ```
+
+<center> <img src="{{ site.baseurl }}/figures/Prediction-plot.png" alt="Img" style="width: 800px;"/> </center>
 
 What do we expect when we move to a 99% prediction interval?
 
