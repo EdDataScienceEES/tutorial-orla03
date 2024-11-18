@@ -7,7 +7,7 @@ library(ggplot2)
 data(trees)
 
 # Build a linear model for trees  
-plot(Girth ~ Height, data = trees, pch = 16)
+plot(Girth ~ Height, data = trees)
 model <- lm(Girth ~ Height, data = trees)
 summary(model)
 coef(model)
@@ -17,10 +17,20 @@ par(mfrow = c(2,2))
 plot(model)
 # seems okay no clear violation!
 
+# Save  plot to figures folder
+png("figures/model_1.png")
+par(mfrow = c(2,2))
+plot(model)
+dev.off()
+
 plot(Girth ~ Height, data = trees, pch = 16)
 abline(model)
 
-
+# Save  plot to figures folder
+png("figures/model_2.png")
+plot(Girth ~ Height, data = trees)
+abline(model)
+dev.off()
 
 
 # We will now find Confidence intervals for our model.
@@ -81,16 +91,22 @@ coef_data
 # Create the plot
 
 # 95% conf intervals!!
-ggplot(data = coef_data) +
+conf_int <- (ggplot(data = coef_data) +
   geom_point(aes(x = term, y = estimate), color = "deeppink", size = 2) +
   geom_errorbar(aes(x = term, ymin = lower, ymax = upper), width = 0.4, color = "black", size = 0.5)+
   geom_text(aes(x = term, y = lower, label = lower,  vjust = 1)) +
   geom_text(aes(x = term, y = upper, label = upper,  vjust = -1)) +
   theme_minimal() +
+    theme_bw() +
   labs(title = "Confidence Intervals for Model Coefficients",
        x = "Term", 
-       y = "Estimate")
+       y = "Estimate"))
   
+ggsave("figures/Conf-Int.png", 
+       plot = conf_int, 
+       width = 10, 
+       height = 5)
+
 # Have a think, what kind of confidence intervals do we want?
 # Narrow confidence intervals show more precision within a model.
 
@@ -112,14 +128,20 @@ pred_m
 print(pred_m, n=Inf)
 # Plot the predictions 
 
-ggplot() +
+conf_2 <- (ggplot() +
   geom_point(data = trees, aes(x = Height, y = Girth), color = "darkgreen") +
   geom_line(data = pred_m, aes(x = x, y = predicted), color = "red") +
   geom_ribbon(data = pred_m, aes(x = x, ymin = conf.low, ymax = conf.high), 
               fill = "lightgrey", alpha = 0.5) + # add the 95% confidence intervals 
   theme_minimal() +
+    theme_bw() +
   labs(x = "Height", y = "Tree Girth", 
-       title = "Tree girth is increasing with height")  
+       title = "Tree girth is increasing with height")  )
+
+ggsave("figures/Conf-Int-2.png", 
+       plot = conf_2, 
+       width = 10, 
+       height = 5)
 
 # 95% conf intervals!!
 ggplot(data = pred_m) +
@@ -153,7 +175,7 @@ ggplot(data = pred_m) +
 # A prediction interval is less certain than a confidence interval. 
 # A prediction interval predicts an individual number, whereas a confidence interval predicts the mean value
 
-#create data frame with three new values for heigh
+#create data frame with three new values for height
 new_height <- data.frame(Height= c(90, 100, 110))
 
 #use the fitted model to predict the value for Girth based on the three new values
@@ -168,18 +190,26 @@ predict(model, newdata = new_height, interval = "predict", level = 0.95)
 
 # Plot the prediction intervals 
 # use model to create prediction intervals
+
 predictions <- predict(model, newdata = trees, interval = "predict", level = 0.95)
 
 #create dataset that contains original data along with prediction intervals
-combined <- cbind(data, predictions) # Add new column to combined
+combined <- cbind(trees, predictions) # Add new column to combined
 
-ggplot(combined, aes(x = Height, 
+predict_plot <- (ggplot(combined, aes(x = Height, 
                      y = Girth)) + #define x and y axis variables
   geom_point() + #add raw data points
   stat_smooth(method = lm) + # Confidence intervals 
   geom_line(aes(y = lwr), col = "red", linetype = "dashed") + #lower prediction interval
-  geom_line(aes(y = upr), col = "red", linetype = "dashed") #upper prediction interval
+  geom_line(aes(y = upr), col = "red", linetype = "dashed")) #upper prediction interval
+
+ggsave("figures/Prediction-plot.png", 
+       plot = predict_plot, 
+       width = 10, 
+       height = 5)
 
 # What do we expect when we move to a 99% prediction interval?
+
+
 
 
