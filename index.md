@@ -1,7 +1,5 @@
 <center><img src="{{ site.baseurl }}/images/conf.png" alt="Img" width="50"></center>
 
-To add images, replace `tutheaderbl1.png` with the file name of any image you upload to your GitHub repository.
-
 ### Tutorial Aims
 
 #### <a href="#section1"> 1. Understand the purpose of Confidence Intervals.</a>
@@ -14,33 +12,32 @@ Often in data science we want to predict where the data might fall. A confidence
 
 If you are interested in how to find confidence intervals in R and how to plot these results to better visualise where the true value might lie, this is the tutorial for you!
 
-Why do we want to find confidence intervals?
-
-These confidence intervals often help data scientists make informed decisions based on the data we are working with, this allows deeper understanding of their next steps and why data has been modelled in a specific way. Genrerally a narrow confidence interval represents a better model due to more precision in the estimates. 
-
 ---------------------------
-We are using `<a href="#section_number">text</a>` to create anchors within our text. For example, when you click on section one, the page will automatically go to where you have put `<a name="section_number"></a>`.
 
-To create subheadings, you can use `#`, e.g. `# Subheading 1` creates a subheading with a large font size. The more hashtags you add, the smaller the text becomes. If you want to make text bold, you can surround it with `__text__`, which creates __text__. For italics, use only one understore around the text, e.g. `_text_`, _text_.
+## Why do we want to find confidence intervals?
 
-# Subheading 1
-## Subheading 2
-### Subheading 3.
+Confidence intervals often help data scientists make informed decisions based on the data we are working with, this allows deeper understanding of their next steps and why data has been modelled in a specific way. 
 
-This is some introductory text for your tutorial. Explain the skills that will be learned and why they are important. Set the tutorial in context.
+## How do we begin our approach to finding a suitable confidence interval?
 
-You can get all of the resources for this tutorial from <a href="https://github.com/ourcodingclub/CC-EAB-tut-ideas" target="_blank">this GitHub repository</a>. Clone and download the repo as a zip file, then unzip it.
+We want to first find a linear model suitable to the research question we are addressing. 
 
 <a name="section1"></a>
 
-## 1. The first section
+## 1. Prerequisites
 
+This tutorial is suitable for beginner data scientists, seeking to find out about statistical analysis via confidence intervals. Prior to attempting this tutorial, you should have a basic knowledge of statistical methods and constructing linear models. Being able to construct linear models, analyse plots and interpret graphs will prove beneficial throughout this tutorial.
 
-At the beginning of your tutorial you can ask people to open `RStudio`, create a new script by clicking on `File/ New File/ R Script` set the working directory and load some packages, for example `ggplot2` and `dplyr`. You can surround package names, functions, actions ("File/ New...") and small chunks of code with backticks, which defines them as inline code blocks and makes them stand out among the text, e.g. `ggplot2`.
+Having an understanding of how to efficiently lay out your code and maintain a well commented script will prove beneficial to gauge a better understanding of the skills required for this tutorial. Please ensure you have completed the following tutorials prior to this tutorial, as this will enhance your understanding of the concepts underlining confidence and predictions within a model! 
 
-When you have a larger chunk of code, you can paste the whole code in the `Markdown` document and add three backticks on the line before the code chunks starts and on the line after the code chunks ends. After the three backticks that go before your code chunk starts, you can specify in which language the code is written, in our case `R`.
+The following tutorials may be useful:
+#### <a href="(https://ourcodingclub.github.io/tutorials/intro-to-r/)"> 1. Getting Started with R </a>
+#### <a href="https://ourcodingclub.github.io/tutorials/model-design/"> 2. Intro to Model Design</a>
+#### <a href="(https://ourcodingclub.github.io/tutorials/etiquette/)"> 3. Coding Etiquette</a>
 
-To find the backticks on your keyboard, look towards the top left corner on a Windows computer, perhaps just above `Tab` and before the number one key. On a Mac, look around the left `Shift` key. You can also just copy the backticks from below.
+You can get all of the resources for this tutorial from <a href="https://github.com/EdDataScienceEES/tutorial-orla03" target="_blank">this GitHub repository</a>. Clone and download the repo as a zip file, then unzip it.
+
+Having a basic understanding of `ggplot2` will be super beneficial!
 
 ```r
 # Set the working directory
