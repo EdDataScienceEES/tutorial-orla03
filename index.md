@@ -1,4 +1,4 @@
-<center><img src="{{ site.baseurl }}/tutheaderbl.png" alt="Img"></center>
+<center><img src="{{ site.baseurl }}/images/conf.png" alt="Img"></center>
 
 To add images, replace `tutheaderbl1.png` with the file name of any image you upload to your GitHub repository.
 
@@ -25,7 +25,7 @@ To create subheadings, you can use `#`, e.g. `# Subheading 1` creates a subheadi
 
 # Subheading 1
 ## Subheading 2
-### Subheading 3
+### Subheading 3.
 
 This is some introductory text for your tutorial. Explain the skills that will be learned and why they are important. Set the tutorial in context.
 
