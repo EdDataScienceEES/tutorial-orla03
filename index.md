@@ -1,4 +1,4 @@
-<center><img src="{{ site.baseurl }}/images/conf.png" alt="Img"></center>
+<center><img src="{{ site.baseurl }}/images/conf.png" alt="Img" width="300"></center>
 
 To add images, replace `tutheaderbl1.png` with the file name of any image you upload to your GitHub repository.
 
