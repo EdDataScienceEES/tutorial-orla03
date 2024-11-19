@@ -4,7 +4,8 @@
 
 ### Tutorial Aims
 
-#### <a href="#section1"> 1. Understand the purpose of Confidence Intervals.</a>
+#### <a href="#section1"> 1. Introduction </a>
+##### <a href="#section1.1"> 1.1 Prerequisites </a>
 
 #### <a href="#section2"> 2. Learn how to use linear models and find their confidence intervals.</a>
 
@@ -16,17 +17,7 @@ If you are interested in how to find confidence intervals in R and how to plot t
 
 ---------------------------
 
-## Why do we want to find confidence intervals?
-
-Confidence intervals often help data scientists make informed decisions based on the data we are working with, this allows deeper understanding of their next steps and why data has been modelled in a specific way. 
-
-## How do we begin our approach to finding a suitable confidence interval?
-
-We want to first find a linear model suitable to the research question we are addressing. 
-
-<a name="section1"></a>
-
-## 1. Prerequisites
+## Prerequisites
 
 This tutorial is suitable for beginner data scientists, seeking to find out about statistical analysis via confidence intervals. Prior to attempting this tutorial, you should have a basic knowledge of statistical methods and constructing linear models. Being able to construct linear models, analyse plots and interpret graphs will prove beneficial throughout this tutorial.
 
@@ -40,6 +31,18 @@ The following tutorials may be useful:
 You can get all of the resources for this tutorial from <a href="https://github.com/EdDataScienceEES/tutorial-orla03" target="_blank">this GitHub repository</a>. Clone and download the repo as a zip file, then unzip it.
 
 Having a basic understanding of `ggplot2` will be super beneficial. However, do not worry if you are only a beginner with R language, we will address each step as we make our way through this tutorial.
+
+<a name="section1"></a>
+
+## 1. Introduction to Confidence Intervals
+
+## Why do we want to find confidence intervals?
+
+Confidence intervals often help data scientists make informed decisions based on the data we are working with, this allows deeper understanding of their next steps and why data has been modelled in a specific way. 
+
+## How do we begin our approach to finding a suitable confidence interval?
+
+We want to first find a linear model suitable to the research question we are addressing. 
 
 The data we will be using to begin with is a dataset built into the `ggplot2` library in R.
 Let's load the package and get a basic understanding of the data.
@@ -73,8 +76,9 @@ Before we begin, recall that a simple linear model is built via the response var
 model <- lm(Girth ~ Height, data = trees) 
 ```
 
-Recall from our previous tutorial, we must check there are no violation of the assumptions
-...
+Recall from our previous tutorial, we must check there are no violation of the assumptions;
+we essentially require constant variance (homoscedasticity), normally distributed residuals and independent variables.
+
 
 ```r
 # Plot to check no violation of assumptions
@@ -85,12 +89,31 @@ plot(model)
 
 <center> <img src="{{ site.baseurl }}/figures/model_1.png" alt="Img" style="width: 800px;"/> </center>
 
+We can see from the top left plot, the residuals seem quite evenly distributed either side of the line.
+The QQ-plot shows us that the residuals follow the shape of a normal distribution but could be improved.
+The scale-location plot shows signs of linearity.
+
+For the purpose of this tutorial, we are not focussing on improving our linear model. Note that this model is not perfect and could be improved!
+head to the following tutorial for a thorough guide on how to improve this basic model. 
+
+#### <a href="https://ourcodingclub.github.io/tutorials/model-design/"> Intro to Model Design</a>
+
+Continuing on we will analyse the models summary. In r it is ALWAYS a good idea to have a look at the summary to evaluate linear models.
 
 ```r
 summary(model) # Print the summary of our model
 ```
-We will begin by gaining a basic understanding of why the summary is useful for later in the tutorial. 
 
+We will begin by gaining a basic understanding of why the summary is useful for later in the tutorial. 
+The red box shows the model estimates for each coefficient; in our case these are the intercept and Height. Followed by the purple box showing the models standard errors.
+Finally the blue shows the degrees of freedom for our linear model. 
+
+### What are degrees of freedom?
+
+These are the number of independent variables that can vary. For example, in our data set we have 31 observations but 2 independent variables in our model, hence $31 - 2 = 29$ df.
+This will prove beneficial in constructing confidence intervals later.
+
+Final note: the Adjusted R-squared is significantly low for our model at 0.2445. This means only 24% of the data is accounted for by this model. Not ideal!
 
 We can now plot the linear model as follows.
 
@@ -272,9 +295,10 @@ What do we expect when we move to a 99% prediction interval?
 
 This is the end of the tutorial. Summarise what the student has learned, possibly even with a list of learning outcomes. In this tutorial we learned:
 
-##### - how to generate fake bivariate data
-##### - how to create a scatterplot in ggplot2
-##### - some of the different plot methods in ggplot2
+##### - how to construct a simple linear model and find the subsequent confidence intervals
+##### - how to construct a confidence interval in R, line by line
+##### - how to plot regressions and confidence intervals in ggplot2
+##### - the difference between confidence and prediction intervals
 
 We can also provide some useful links, include a contact form and a way to send feedback.
 
