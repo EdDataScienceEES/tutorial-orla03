@@ -4,8 +4,10 @@
 
 ### Tutorial Aims
 
-#### <a href="#section1"> 1. Introduction </a>
+#### <a href="#section1"> 1. Tutorial Aims </a>
 ##### <a href="#section1.1"> 1.1 Prerequisites </a>
+##### <a href="#section1.2"> 1.2 Understanding Confidence Intervals </a>
+##### <a href="#section1.3"> 1.3 Introducing the Data </a>
 
 #### <a href="#section2"> 2. Learn how to use linear models and find their confidence intervals.</a>
 
@@ -16,8 +18,10 @@ Often in data science we want to predict where the data might fall. A confidence
 If you are interested in how to find confidence intervals in R and how to plot these results to better visualise where the true value might lie, this is the tutorial for you!
 
 ---------------------------
+<a name="section1"></a>
+<a name="section1.1"></a>
 
-## Prerequisites
+## 1.1 Prerequisites
 
 This tutorial is suitable for beginner data scientists, seeking to find out about statistical analysis via confidence intervals. Prior to attempting this tutorial, you should have a basic knowledge of statistical methods and constructing linear models. Being able to construct linear models, analyse plots and interpret graphs will prove beneficial throughout this tutorial.
 
@@ -32,19 +36,27 @@ You can get all of the resources for this tutorial from <a href="https://github.
 
 Having a basic understanding of `ggplot2` will be super beneficial. However, do not worry if you are only a beginner with R language, we will address each step as we make our way through this tutorial.
 
-<a name="section1"></a>
+<a name="section1.2"></a>
 
-## 1. Introduction to Confidence Intervals
+## 1.2 Understanding Confidence Intervals
 
 ## Why do we want to find confidence intervals?
 
-Confidence intervals often help data scientists make informed decisions based on the data we are working with, this allows deeper understanding of their next steps and why data has been modelled in a specific way. 
+Confidence intervals often help data scientists make informed decisions based on the data we are working with, 
+this allows deeper understanding of their next steps and why data has been modelled in a specific way. 
+Confidence intervals are crucial in ecological and enviornmental data analysis because they provide a way to assess reliability, support decision-making, and improve the interpretability of  data. 
+They help ensure that ecological conclusions are based on an understanding of the data at hand and of the variability and uncertainty inherent in ecological data. We often will not have perfect data and will need to 
+analyse the data we are using through data wrangling or such techniques!
 
 ## How do we begin our approach to finding a suitable confidence interval?
 
-We want to first find a linear model suitable to the research question we are addressing. 
+Within this tutorial we want to first find a linear model suitable to the research question we are addressing. 
 
-The data we will be using to begin with is a dataset built into the `ggplot2` library in R.
+<a name="section1.3"></a>
+
+## 1.3 Introducing the Data
+
+The data we will be using to begin with is a `trees` dataset built into the `ggplot2` package in R.
 Let's load the package and get a basic understanding of the data.
 
 ```r
@@ -59,6 +71,16 @@ library(ggplot2)
 data(trees)
 # Note: the data will now appear as `trees` in your R Studio environment.
 ```
+Having a basic understanding of the data is essential prior to any task.
+
+### How many variables does the dataset include, and how many observations?
+
+{% capture reveal %}
+
+The data has 31 observations with 3 different variables: Girth, Height and Volume.
+
+{% endcapture %} 
+{% include reveal.html button="Click for the answer" content=reveal %}
 
 We will now begin through this tutorial.
 
@@ -87,7 +109,7 @@ plot(model)
 # seems okay no clear violation!
 ```
 
-<center> <img src="{{ site.baseurl }}/figures/model_1.png" alt="Img" style="width: 800px;"/> </center>
+<center> <img src="{{ site.baseurl }}/figures/model_1.png" alt="Img" style="width: 500px;"/> </center>
 
 We can see from the top left plot, the residuals seem quite evenly distributed either side of the line.
 The QQ-plot shows us that the residuals follow the shape of a normal distribution but could be improved.
