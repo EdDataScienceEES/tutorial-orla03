@@ -82,16 +82,15 @@ library(ggplot2)
 
 # Model coefficients and confidence intervals into a data frame
 coef_data <- data.frame(
-  term = c("Intercept", "Height"),
-  estimate = c(-6.0015820, 0.09589546),  # The point estimates of the coefficients
-  lower = c(-18.37837106, 0.09589546),  # Lower bounds of the confidence intervals
-  upper = c(6.0015820, 0.4155988)       # Upper bounds of the confidence intervals
+  term = names(model_est),
+  estimate = model_est,             # Point estimates from the model
+  lower = lower_bounds,            # Lower bounds of the confidence intervals
+  upper = upper_bounds            # Upper bounds of the confidence intervals
 )
-coef_data
-# Create the plot
 
+coef_data
 # 95% conf intervals!!
-conf_int <- (ggplot(data = coef_data) +
+(conf_int <- (ggplot(data = coef_data) +
   geom_point(aes(x = term, y = estimate), color = "deeppink", size = 2) +
   geom_errorbar(aes(x = term, ymin = lower, ymax = upper), width = 0.4, color = "black", size = 0.5)+
   geom_text(aes(x = term, y = lower, label = lower,  vjust = 1)) +
@@ -100,8 +99,8 @@ conf_int <- (ggplot(data = coef_data) +
     theme_bw() +
   labs(title = "Confidence Intervals for Model Coefficients",
        x = "Term", 
-       y = "Estimate"))
-  
+       y = "Estimate")))
+
 ggsave("figures/Conf-Int.png", 
        plot = conf_int, 
        width = 10, 
@@ -110,7 +109,15 @@ ggsave("figures/Conf-Int.png",
 # Have a think, what kind of confidence intervals do we want?
 # Narrow confidence intervals show more precision within a model.
 
+# Import plotrix library 
+install.packages("plotrix")
+library(plotrix) 
 
+# Create plotrix plot with confidence intervals 
+plotCI(x = as.numeric(as.factor(coef_data$term)),
+       y = as.numeric(coef_data$estimate),
+       li = as.numeric(coef_data$lower),
+       ui = as.numeric(coef_data$upper))
 
 library(ggeffects)  # install the package first if you haven't already, then load it
 
@@ -176,7 +183,8 @@ ggplot(data = pred_m) +
 # A prediction interval predicts an individual number, whereas a confidence interval predicts the mean value
 
 #create data frame with three new values for height
-new_height <- data.frame(Height= c(90, 100, 110))
+new_height <- data.frame(Height= c(90, 100, 110, 120, 130))
+new_height
 
 #use the fitted model to predict the value for Girth based on the three new values
 #for height
@@ -184,9 +192,31 @@ predict(model, newdata = new_height)
 # example: For a tree with tree height of 90, the predicted tree girth is 16.76 
 
 # create the prediction intervals
-predict(model, newdata = new_height, interval = "predict", level = 0.95)
+predictions <- predict(model, newdata = new_height, interval = "predict", level = 0.95)
+predictions
 # 95% prediction interval for Tree girth with a height of 90 is 10.58 to 22.93
+
 # level has a default at 95%
+comb <- data.frame(cbind(new_height,predictions))
+comb
+
+(pred_int <- (ggplot(data = comb) +
+                geom_point(aes(x = Height, y = fit), color = "deeppink", size = 2) +
+                geom_errorbar(aes(x = Height, ymin = lwr, ymax = upr), width = 0.4, color = "black", size = 0.5)+
+                geom_text(aes(x = Height, y = lwr, label = round(lwr, 1),  vjust = 1)) +
+                geom_text(aes(x = Height, y = upr, label = round(upr, 1),  vjust = -1)) +
+                ylim(0, 40) + 
+                xlim(80,140) + # added scale limits
+                theme_minimal() +
+                theme_bw() +
+                labs(title = "Prediction Intervals for New Heights",
+                     x = "Height", 
+                     y = "Predicted Tree Girth")))
+
+ggsave("figures/Prediction-int.png", 
+       plot = pred_int, 
+       width = 10, 
+       height = 5)
 
 # Plot the prediction intervals 
 # use model to create prediction intervals
@@ -196,17 +226,20 @@ predictions <- predict(model, newdata = trees, interval = "predict", level = 0.9
 #create dataset that contains original data along with prediction intervals
 combined <- cbind(trees, predictions) # Add new column to combined
 
-predict_plot <- (ggplot(combined, aes(x = Height, 
+(predict_plot <- (ggplot(combined, aes(x = Height, 
                      y = Girth)) + #define x and y axis variables
   geom_point() + #add raw data points
   stat_smooth(method = lm) + # Confidence intervals 
   geom_line(aes(y = lwr), col = "red", linetype = "dashed") + #lower prediction interval
-  geom_line(aes(y = upr), col = "red", linetype = "dashed")) #upper prediction interval
+  geom_line(aes(y = upr), col = "red", linetype = "dashed")) + #upper prediction interval
+  theme_minimal())
 
 ggsave("figures/Prediction-plot.png", 
        plot = predict_plot, 
        width = 10, 
        height = 5)
+
+
 
 # What do we expect when we move to a 99% prediction interval?
 
