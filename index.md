@@ -259,7 +259,7 @@ This shows us that the confidence interval for the intercept is much larger than
 Narrow confidence intervals show more precision within a model since genrerally a narrow confidence interval represents a better model due to more precision in the estimates. 
 
 {% endcapture %} 
-{% includes/reveal.html button="Click for the answer" content=reveal %}
+{% include reveal.html button="Click for the answer" content=reveal %}
 
 
 We have seen how to model the coefficients and the confidence intervals, what about the data we predict?
