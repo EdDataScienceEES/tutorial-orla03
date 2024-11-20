@@ -1,10 +1,3 @@
----
-layout: tutorial
-title: Intro to Confidence Intervals in R
-date: 2024-11-20 10:00:00
-author: Orla Brown
----
-
 # Intro to Confidence Intervals in R
 
 <center><img src="{{ site.baseurl }}/images/conf.png" alt="Img" style="width: 500px;"/></center>
