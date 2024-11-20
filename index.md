@@ -116,7 +116,7 @@ The QQ-plot shows us that the residuals follow the shape of a normal distributio
 The scale-location plot shows signs of linearity.
 
 For the purpose of this tutorial, we are not focussing on improving our linear model. Note that this model is not perfect and could be improved!
-head to the following tutorial for a thorough guide on how to improve this basic model. 
+Head to the following tutorial for a thorough guide on how to improve this basic model. 
 
 #### <a href="https://ourcodingclub.github.io/tutorials/model-design/"> Intro to Model Design</a>
 
@@ -142,16 +142,15 @@ We can now plot the linear model as follows.
 ```r
 plot(Girth ~ Height, data = trees)
 abline(model)
-
 ```
 <center> <img src="{{ site.baseurl }}/figures/model_2.png" alt="Img" style="width: 800px;"/> </center>
 
+The model shows the raw data points with a consistent increase in tree girth with height.
 
-We will now find Confidence intervals for our model.
-R has a built in function to find confidence intervals, however we will manually find these intervals and then test against the function
-We need an understanding of how to find the mean, standard error, t-score, and margins of error
+We will now find Confidence intervals for our model. R has a built in function to find confidence intervals, however we will manually find these intervals and then test against the function.
+Within data science we generally need an understanding of how to find the mean, standard error, t-score, and margins of error, this step-by-step solution is just the beginning of your statistical analysis!
 
-Learning how to construct a confidence interval in essential in ecology, as we often need to fully understand how to analyse a confidence interval.
+Learning how to construct a confidence interval in essential in ecology, as we often need to fully understand how to analyse a confidence interval, building these together will give you a thorough understanding of the code R undertakes.
 
 ```r
 # We will print the summary of our model then extract the relevant information
@@ -172,14 +171,25 @@ sample <- length(trees$Girth)
 
 degrees_freedom <- sample - 2 
 degrees_freedom
+```
+Insert code snippet!!
+Correct! The degrees of freedom match our summary!
 
+We will now introduce significance levels; these are highly important and coherent with the level chosen as alpha. 
+For example, when computing a 95% confidence interval, this suggests our value of alpha will be 5% and the associated
+confidence interval output will give us a numerical value for the data at 2.5% and 97.5%. 
+Don't worry too much here, R has a default of 95% level.
+We will understand mathematically the formula for a Confidence Interval, this will help with construction. 
+
+
+```r
 # Calculate t-score for 95% confidence interval
 # We use the qt function here!
 alpha <- 0.05 # alpha is 0.05 for a 95% conf interval
 score <- qt(p = alpha / 2, df = degrees_freedom, lower.tail = FALSE)
 
 # Calculate margin of error for the coefficients
-margin <- score * model_se
+margin <- score * model_se # this stems from the equation above.
 
 # Calculate the confidence intervals (lower and upper bounds)
 lower_bounds <- model_est - margin
@@ -193,19 +203,17 @@ print(combined_bounds)
 
 ```
 
-We will now check opur values against the built in r function.
+insert the conf intervals printed!!!!!!
+
+We will now check our values against the built in r function.
 
 ```r
 # Compare to the built in r function!
 confint(model, level=0.95)
 ```
+insert output
 
-
-
-And finally, plot the data:
-
-
-At this point it would be a good idea to include an image of what the plot is meant to look like so students can check they've done it right. Replace `IMAGE_NAME.png` with your own image file:
+Success!! These numbers match, this gives us an idea of the way these intervals can be interpreted. 
 
 <center> <img src="{{ site.baseurl }}/IMAGE_NAME.png" alt="Img" style="width: 800px;"/> </center>
 
@@ -213,19 +221,21 @@ At this point it would be a good idea to include an image of what the plot is me
 
 ## 3. Learn how to plot the confidence intervals and compare these.
 
+Simply finding these intervals helps with analysis, but as data scientists we want to be able to visualise our data!
+
+Lets plot the intervals.
+
 ```r
 library(ggplot2)
 
 # Model coefficients and confidence intervals into a data frame
 coef_data <- data.frame(
-  term = c("Intercept", "Height"),
-  estimate = c(-6.0015820, 0.09589546),  # The point estimates of the coefficients
-  lower = c(-18.37837106, 0.09589546),  # Lower bounds of the confidence intervals
-  upper = c(6.0015820, 0.4155988)       # Upper bounds of the confidence intervals
-)
-coef_data
-# Create the plot
+  term = names(model_est),
+  estimate = model_est,             # Point estimates from the model
+  lower = lower_bounds,            # Lower bounds of the confidence intervals
+  upper = upper_bounds)            # Upper bounds of the confidence intervals
 
+# Create the plot
 # 95% conf intervals!!
 ggplot(data = coef_data) +
   geom_point(aes(x = term, y = estimate), color = "deeppink", size = 2) +
@@ -240,9 +250,17 @@ ggplot(data = coef_data) +
 ```
 <center> <img src="{{ site.baseurl }}/figures/Conf-Int.png" alt="Img" style="width: 800px;"/> </center>
 
-Have a think, what kind of confidence intervals do we want?
-**show answer 
-Narrow confidence intervals show more precision within a model.
+This shows us that the confidence interval for the intercept is much larger than for the Height variable, we would expect this.
+
+### Have a think, what kind of confidence intervals do we want?
+
+{% capture reveal %}
+
+Narrow confidence intervals show more precision within a model since genrerally a narrow confidence interval represents a better model due to more precision in the estimates. 
+
+{% endcapture %} 
+{% include reveal.html button="Click for the answer" content=reveal %}
+
 
 We have seen how to model the coefficients and the confidence intervals, what about the data we predict?
 Often when working with data in ecology, we want to predict what our future model might look like
@@ -273,40 +291,34 @@ ggplot(data = pred_m) +
 
 We may now ask but what is the difference between a confidence interval and a prediction interval?
 Good question, lets find out!
-A prediction interval is less certain than a confidence interval. 
-A prediction interval predicts an individual number, whereas a confidence interval predicts the mean value
+A prediction interval is less certain than a confidence interval. A prediction interval predicts an individual number, whereas a confidence interval predicts the mean value.
 
 
 ```r
-#create data frame with three new values for height
+#create data frame with three new values for Height
 new_height <- data.frame(Height= c(90, 100, 110))
 
-#use the fitted model to predict the value for Girth based on the three new values
-#for height
-predict(model, newdata = new_height)
-# example: For a tree with tree height of 90, the predicted tree girth is 16.76 
+# Use the fitted model to predict the value for Girth based on the three new values for height
+predict(model, newdata = new_height) # newdata is the new data frame
 ```
+
+This shows us that for a tree with tree height of 90, the predicted tree girth is 16.76 **put in a table
+
+We will now predict the intervals for our hwight values from the `trees` dataframe.
 
 ```r
 # create the prediction intervals
-predict(model, newdata = new_height, interval = "predict", level = 0.95)
-# 95% prediction interval for Tree girth with a height of 90 is 10.58 to 22.93
-# level has a default at 95%
-
-# Plot the prediction intervals 
-# use model to create prediction intervals
-
 predictions <- predict(model, newdata = trees, interval = "predict", level = 0.95)
+# 95% prediction interval for Tree girth with a height of 90 is 10.58 to 22.93
 
-#create dataset that contains original data along with prediction intervals
+# create dataset that contains original data along with prediction intervals
 combined <- cbind(trees, predictions) # Add new column to combined
 
-ggplot(combined, aes(x = Height, 
-                     y = Girth)) + #define x and y axis variables
-  geom_point() + #add raw data points
-  stat_smooth(method = lm) + # Confidence intervals 
-  geom_line(aes(y = lwr), col = "red", linetype = "dashed") + #lower prediction interval
-  geom_line(aes(y = upr), col = "red", linetype = "dashed") #upper prediction interval
+ggplot(combined, aes(x = Height, y = Girth)) + #define x and y variables
+  geom_point() + # add raw data points
+  stat_smooth(method = lm) + # add the linear model 
+  geom_line(aes(y = lwr), col = "red", linetype = "dashed") + # lower prediction interval
+  geom_line(aes(y = upr), col = "red", linetype = "dashed") # upper prediction interval
 
 ```
 
@@ -314,13 +326,17 @@ ggplot(combined, aes(x = Height,
 
 What do we expect when we move to a 99% prediction interval?
 
+Intuitively, when we more to 99% intervals, we are predicting a larger interval in which there is 99% probability the predicted value lies in thei interval, 
+therefore the interval will be LARGER.
 
-This is the end of the tutorial. Summarise what the student has learned, possibly even with a list of learning outcomes. In this tutorial we learned:
+Well done, youv've successfully completed the tutorial! 
 
-##### - how to construct a simple linear model and find the subsequent confidence intervals
-##### - how to construct a confidence interval in R, line by line
-##### - how to plot regressions and confidence intervals in ggplot2
-##### - the difference between confidence and prediction intervals
+hopefully you can now feel confident in your ability to  
+
+##### - Understand the use of confidence intervals and how to construct them
+##### - Manually find a confidence interval
+##### - Plot regressions and confidence intervals in ggplot2
+##### - Know the difference between confidence and prediction intervals
 
 We can also provide some useful links, include a contact form and a way to send feedback.
 
