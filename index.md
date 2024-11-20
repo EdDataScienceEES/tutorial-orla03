@@ -1,6 +1,13 @@
+---
+layout: tutorial
+title: Intro to Confidence Intervals in R
+date: 2024-11-20 10:00:00
+author: Orla Brown
+---
+
 # Intro to Confidence Intervals in R
 
-<center><img src="{{ site.baseurl }}/images/conf.png" alt="Img" width="250"></center>
+<center><img src="{{ site.baseurl }}/images/conf.png" alt="Img" style="width: 500px;"/></center>
 
 ### Tutorial Aims
 
@@ -9,7 +16,8 @@
 ##### <a href="#section1.2"> 1.2 Understanding Confidence Intervals </a>
 ##### <a href="#section1.3"> 1.3 Introducing the Data </a>
 
-#### <a href="#section2"> 2. Learn how to use linear models and find their confidence intervals.</a>
+#### <a href="#section2"> 2. Build a Linear Model </a>
+##### <a href="#section2"> 2.1 Construct a confidence Interval </a>
 
 #### <a href="#section3"> 3. Learn how to plot the confidence intervals and compare these.</a>
 
@@ -44,7 +52,7 @@ Having a basic understanding of `ggplot2` will be super beneficial. However, do 
 
 Confidence intervals often help data scientists make informed decisions based on the data we are working with, 
 this allows deeper understanding of their next steps and why data has been modelled in a specific way. 
-Confidence intervals are crucial in ecological and enviornmental data analysis because they provide a way to assess reliability, support decision-making, and improve the interpretability of  data. 
+Confidence intervals are crucial in ecological and environmental data analysis because they provide a way to assess reliability, support decision-making, and improve the interpretability of  data. 
 They help ensure that ecological conclusions are based on an understanding of the data at hand and of the variability and uncertainty inherent in ecological data. We often will not have perfect data and will need to 
 analyse the data we are using through data wrangling or such techniques!
 
@@ -130,7 +138,7 @@ We will begin by gaining a basic understanding of why the summary is useful for 
 The red box shows the model estimates for each coefficient; in our case these are the intercept and Height. Followed by the purple box showing the models standard errors.
 Finally the blue shows the degrees of freedom for our linear model. 
 
-### What are degrees of freedom?
+What are degrees of freedom?
 
 These are the number of independent variables that can vary. For example, in our data set we have 31 observations but 2 independent variables in our model, hence $31 - 2 = 29$ df.
 This will prove beneficial in constructing confidence intervals later.
@@ -143,9 +151,13 @@ We can now plot the linear model as follows.
 plot(Girth ~ Height, data = trees)
 abline(model)
 ```
-<center> <img src="{{ site.baseurl }}/figures/model_2.png" alt="Img" style="width: 800px;"/> </center>
+<center> <img src="{{ site.baseurl }}/figures/model_2.png" alt="Img" style="width: 500px;"/> </center>
 
 The model shows the raw data points with a consistent increase in tree girth with height.
+
+<a name="section2.1"></a>
+
+## 2.2 Construct a Confidence Interval 
 
 We will now find Confidence intervals for our model. R has a built in function to find confidence intervals, however we will manually find these intervals and then test against the function.
 Within data science we generally need an understanding of how to find the mean, standard error, t-score, and margins of error, this step-by-step solution is just the beginning of your statistical analysis!
@@ -179,6 +191,7 @@ We will now introduce significance levels; these are highly important and cohere
 For example, when computing a 95% confidence interval, this suggests our value of alpha will be 5% and the associated
 confidence interval output will give us a numerical value for the data at 2.5% and 97.5%. 
 Don't worry too much here, R has a default of 95% level.
+
 We will understand mathematically the formula for a Confidence Interval, this will help with construction. 
 
 
@@ -211,13 +224,12 @@ We will now check our values against the built in r function.
 # Compare to the built in r function!
 confint(model, level=0.95)
 ```
-insert output
 
 Success!! These numbers match, this gives us an idea of the way these intervals can be interpreted. 
 
 <center> <img src="{{ site.baseurl }}/IMAGE_NAME.png" alt="Img" style="width: 800px;"/> </center>
 
-<a name="section1"></a>
+<a name="section3"></a>
 
 ## 3. Learn how to plot the confidence intervals and compare these.
 
@@ -295,16 +307,41 @@ A prediction interval is less certain than a confidence interval. A prediction i
 
 
 ```r
-#create data frame with three new values for Height
-new_height <- data.frame(Height= c(90, 100, 110))
+#create data frame with three new values for height
+new_height <- data.frame(Height= c(90, 100, 110, 120, 130))
 
 # Use the fitted model to predict the value for Girth based on the three new values for height
-predict(model, newdata = new_height) # newdata is the new data frame
+predictions <- predict(model, newdata = new_height, interval = "predict", level = 0.95) # newdata is the new data frame
+
+comb <- data.frame(cbind(new_height,predictions)) # Combine into a single data frame
 ```
 
 This shows us that for a tree with tree height of 90, the predicted tree girth is 16.76 **put in a table
 
-We will now predict the intervals for our hwight values from the `trees` dataframe.
+We can now plot these prediction intervals using the skills we learnt in section 3.
+
+```r
+(pred_int <- (ggplot(data = comb) +
+                geom_point(aes(x = Height, y = fit), color = "deeppink", size = 2) +
+                geom_errorbar(aes(x = Height, ymin = lwr, ymax = upr), width = 0.4, color = "black", size = 0.5)+
+                geom_text(aes(x = Height, y = lwr, label = round(lwr, 1),  vjust = 1)) +
+                geom_text(aes(x = Height, y = upr, label = round(upr, 1),  vjust = -1)) +
+                ylim(0, 40) + 
+                xlim(80,140) + # added scale limits
+                theme_minimal() +
+                theme_bw() +
+                labs(title = "Prediction Intervals for New Heights",
+                     x = "Height", 
+                     y = "Predicted Tree Girth")))
+
+```
+<center> <img src="{{ site.baseurl }}/figures/Prediction-int.png" alt="Img" style="width: 800px;"/> </center>
+
+Time to notice a few important points!!
+The prediction intervals increase in size as the height increases, this is due to the lack of cetainty for the model in the predictions its making.
+Recall that a smaller confidence interval generally means more precision, this applies to prediction intervals too!
+
+We will now predict the intervals for our height values from the `trees` dataframe.
 
 ```r
 # create the prediction intervals
@@ -318,25 +355,28 @@ ggplot(combined, aes(x = Height, y = Girth)) + #define x and y variables
   geom_point() + # add raw data points
   stat_smooth(method = lm) + # add the linear model 
   geom_line(aes(y = lwr), col = "red", linetype = "dashed") + # lower prediction interval
-  geom_line(aes(y = upr), col = "red", linetype = "dashed") # upper prediction interval
+  geom_line(aes(y = upr), col = "red", linetype = "dashed")  + # upper prediction interval
+  theme_minimal()
 
 ```
 
 <center> <img src="{{ site.baseurl }}/figures/Prediction-plot.png" alt="Img" style="width: 800px;"/> </center>
 
-What do we expect when we move to a 99% prediction interval?
+## What do we expect when we move to a 99% prediction interval?
 
 Intuitively, when we more to 99% intervals, we are predicting a larger interval in which there is 99% probability the predicted value lies in thei interval, 
 therefore the interval will be LARGER.
 
-Well done, youv've successfully completed the tutorial! 
+Well done, you've successfully completed the tutorial! 
 
-hopefully you can now feel confident in your ability to  
+Hopefully you can now feel confident in your ability to:  
 
 ##### - Understand the use of confidence intervals and how to construct them
 ##### - Manually find a confidence interval
 ##### - Plot regressions and confidence intervals in ggplot2
 ##### - Know the difference between confidence and prediction intervals
+
+<center> <img src="{{ site.baseurl }}/images/tree.png" alt="Img" style="width: 500px;"/> </center>
 
 We can also provide some useful links, include a contact form and a way to send feedback.
 
