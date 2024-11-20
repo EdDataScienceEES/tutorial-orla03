@@ -126,6 +126,8 @@ Continuing on we will analyse the models summary. In r it is ALWAYS a good idea 
 ```r
 summary(model) # Print the summary of our model
 ```
+<center> <img src="{{ site.baseurl }}/images/summary.jpeg" alt="Img" style="width: 500px;"/> </center>
+
 
 We will begin by gaining a basic understanding of why the summary is useful for later in the tutorial. 
 The red box shows the model estimates for each coefficient; in our case these are the intercept and Height. Followed by the purple box showing the models standard errors.
@@ -187,6 +189,7 @@ Don't worry too much here, R has a default of 95% level.
 
 We will understand mathematically the formula for a Confidence Interval, this will help with construction. 
 
+<center> <img src="{{ site.baseurl }}/images/CI.jpeg" alt="Img" style="width: 500px;"/> </center>
 
 ```r
 # Calculate t-score for 95% confidence interval
