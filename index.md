@@ -1,6 +1,6 @@
 # Intro to Confidence Intervals in R
 
-<center><img src="{{ site.baseurl }}/images/conf.png" alt="Img" style="width: 500px;"/></center>
+<center><img src="{{ site.baseurl }}/images/conf.png" alt="Img" style="width: 100%; height: auto;"/></center>
 
 ### Tutorial Aims
 
@@ -379,16 +379,68 @@ ggplot(combined, aes(x = Height, y = Girth)) + #define x and y variables
 
 ## Challenge!!
 
-In this section, we will challenge ourselves to plot both 99% confidence and 99% prediction intervals for ...
+In this section, we will challenge ourselves to plot both 99% confidence and 95% confidence intervals for the `dragons` data.
+This gives us an opportunity to analyse how the change in size of interval effects the results.
 
-#### What do we expect when we move to a 99% prediction interval?
+Questions to think about before we begin!!
 
-Intuitively, when we move to 99% intervals, we are predicting a larger interval in which there is 99% probability the predicted value lies in the interval, 
+#### What do we expect when we move to a 99% from a 95% confidence interval?
+#### What does the larger confidence interval imply about the predictions?
+
+{% capture reveal %}
+
+```r
+load("dragons.RData") # load the dragons data
+dragons$bodyLength2 <- scale(dragons$bodyLength, center = TRUE, scale = TRUE) # scale the body length
+mountain.lm <- lm(testScore ~ bodyLength2 + mountainRange, data = dragons) # construct a linear model
+
+# Check the plots
+par(mfrow = c(2,2))
+plot(mountain.lm) # no clear violations, plots okay!!
+
+# Create the confidence intervals
+conf_95 <- confint(mountain.lm, level=0.95) # 95% remember this is default!
+conf_99 <- confint(mountain.lm, level=0.99) # 99% level
+
+# Model coefficients and confidence intervals into a data frame
+coef_95_data <- data.frame(
+  term = names(coef(mountain.lm)),
+  estimate = coef(mountain.lm), # Point estimates from the model
+  lower = conf_95[,1], # Lower bounds of the confidence intervals
+  upper = conf_95[,2], # Upper bounds of the confidence intervals
+  diff = conf_95[,2] - conf_95[,1]) # add the difference           
+
+# Model coefficients and confidence intervals into a data frame
+coef_99_data <- data.frame(
+  term = names(coef(mountain.lm)),
+  estimate = coef(mountain.lm), # Point estimates from the model
+  lower = conf_99[,1], # Lower bounds of the confidence intervals
+  upper = conf_99[,2], # Upper bounds of the confidence intervals
+  diff = conf_99[,2] - conf_99[,1]) # add the difference         
+  
+plot_diff <- (ggplot() +
+             geom_point(data = coef_99_data, aes(x = term, y = estimate), color = "black", size = 2) +
+             geom_errorbar(data = coef_99_data, aes(x = term, ymin = lower, ymax = upper), width = 0.4, color = "red", size = 0.5)+
+             geom_text(data = coef_99_data, aes(x = term, y = estimate, label = round(diff, 1), vjust = -0.8, hjust = -0.2), color = "red") +
+             geom_point(data = coef_95_data, aes(x = term, y = estimate), color = "black", size = 2) +
+             geom_errorbar(data = coef_95_data, aes(x = term, ymin = lower, ymax = upper), width = 0.4, color = "black", size = 0.5)+
+             geom_text(data = coef_95_data, aes(x = term, y = estimate, label = round(diff, 1), vjust = 0.8, hjust = -0.2)) +
+             theme_minimal() +
+             labs(title = "Confidence Intervals for Model Coefficients",
+                  x = "Term", 
+                  y = "Estimate"))
+```
+<center> <img src="{{ site.baseurl }}/figures/Diff-int.png" alt="Img" style="width: 800px;"/> </center>
+
+Answers to the Questions:
+1. Intuitively, when we move to 99% intervals, we are predicting a larger interval in which there is 99% probability the predicted value lies in the interval, 
 therefore the interval will be LARGER.
+2. The larger confidence interval implies less precision in the estimates made by the model.
 
-I challenge you to find 99% intervals for 
+{% endcapture %} 
+{% include reveal.html button="Click for the answer" content=reveal %}
 
-Well done, you've successfully completed the tutorial! 
+Well done, you've successfully completed the tutorial, happy coding! 
 
 Hopefully you can now feel confident in your ability to:  
 
