@@ -4,7 +4,12 @@
 
 ### Tutorial Aims
 
-#### <a href="#section1"> 1. Tutorial Aims </a>
+1. To be able to find confidence intervals corresponding to a simple linear model.
+2. To be able to predict estimates and their corresponding prediction intervals.
+3. To be able to understand the difference between confidence intervals and prediction intervals.
+4. To be able to use visualisation techniques to interpret the intervals.
+
+#### <a href="#section1"> 1. Introduction </a>
 ##### <a href="#section1.1"> 1.1 Prerequisites </a>
 ##### <a href="#section1.2"> 1.2 Understanding Confidence Intervals </a>
 ##### <a href="#section1.3"> 1.3 Introducing the Data </a>
@@ -14,12 +19,16 @@
 
 #### <a href="#section3"> 3. Learn how to plot the confidence intervals and compare these.</a>
 
+#### <a href="#section4"> 4. Challenge Yourself!! </a>
+
+
+<a name="section1"></a>
+
 Often in data science we want to predict where the data might fall. A confidence interval gives us a range of plausible values in which our true value might lie; this is essential in ecologicial data science and often used to assess the importance of true effects!
 
 If you are interested in how to find confidence intervals in R and how to plot these results to better visualise where the true value might lie, this is the tutorial for you!
 
 ---------------------------
-<a name="section1"></a>
 <a name="section1.1"></a>
 
 ## 1.1 Prerequisites
@@ -83,14 +92,17 @@ The data has 31 observations with 3 different variables: Girth, Height and Volum
 {% endcapture %} 
 {% include reveal.html button="Click for the answer" content=reveal %}
 
+
 We will now begin through this tutorial.
 
 <a name="section2"></a>
 
-## 2. Learning how to use linear models and find their confidence intervals.
+<center><img src="{{ site.baseurl }}/images/tree_l.png" alt="Img" style="width: 100%; height: auto;"/></center>
+
+## 2. Learning how to use linear models and findin their confidence intervals
 
 We will begin by constructing a simple linear model for the `trees` data and subsequently 
-constructing relevant confidence intervals. Our aim here is to investigate the correlation between tree girth and tree height. 
+constructing relevant confidence intervals. Our aim here is to investigate the correlation between tree `girth` and tree `height`. 
 
 Before we begin, recall that a simple linear model is built via the response variable being predicted by the predictor.
 
@@ -117,9 +129,8 @@ The QQ-plot shows us that the residuals follow the shape of a normal distributio
 The scale-location plot shows signs of linearity.
 
 For the purpose of this tutorial, we are not focussing on improving our linear model. Note that this model is not perfect and could be improved!
-Head to the following tutorial for a thorough guide on how to improve this basic model. 
-
-#### <a href="https://ourcodingclub.github.io/tutorials/model-design/"> Intro to Model Design</a>
+Head to the following tutorial for a thorough guide on how to improve this basic model.
+###### <a href="https://ourcodingclub.github.io/tutorials/model-design/"> Intro to Model Design</a>
 
 Continuing on we will analyse the models summary. In r it is ALWAYS a good idea to have a look at the summary to evaluate linear models.
 
@@ -133,9 +144,9 @@ We will begin by gaining a basic understanding of why the summary is useful for 
 The red box shows the model estimates for each coefficient; in our case these are the intercept and Height. Followed by the purple box showing the models standard errors.
 Finally the blue shows the degrees of freedom for our linear model. 
 
-What are degrees of freedom?
+##### What are degrees of freedom?
 
-These are the number of independent variables that can vary. For example, in our data set we have 31 observations but 2 independent variables in our model, hence $31 - 2 = 29$ df.
+These are the number of independent variables that can vary. For example, in our data set we have 31 observations but 2 independent variables in our model, hence 31 - 2 = 29 df.
 This will prove beneficial in constructing confidence intervals later.
 
 Final note: the Adjusted R-squared is significantly low for our model at 0.2445. This means only 24% of the data is accounted for by this model. Not ideal!
@@ -212,7 +223,9 @@ print(combined_bounds)
 
 ```
 
-insert the conf intervals printed!!!!!!
+<center> <img src="{{ site.baseurl }}/images/bounds.png" alt="Img" style="width: 500px;"/> </center>
+
+This shows us the lower bound at 2.5% and upper bound and 97.5% (because alpha is 5%!) corresponding to both the intercept and the height.
 
 We will now check our values against the built in r function.
 
@@ -221,13 +234,14 @@ We will now check our values against the built in r function.
 confint(model, level=0.95)
 ```
 
-Success!! These numbers match, this gives us an idea of the way these intervals can be interpreted. 
-
-<center> <img src="{{ site.baseurl }}/IMAGE_NAME.png" alt="Img" style="width: 800px;"/> </center>
+Success!! These numbers match, this gives us an idea of the way these intervals can be interpreted. It can often
+be useful to use the`confint` function for plotting or checking our analysis, but often in data science we need to understand how these numbers are calculated.
+For example, using error margins and finding the t-score value proves beneficial depending on the analysis conducted, this is embedded in the confint function,
+but being able to extract these by manually finding the interval as we have above is a useful skill!
 
 <a name="section3"></a>
 
-## 3. Learn how to plot the confidence intervals and compare these.
+## 3. Learn how to plot the confidence intervals and compare these
 
 Simply finding these intervals helps with analysis, but as data scientists we want to be able to visualise our data!
 
@@ -271,17 +285,21 @@ Narrow confidence intervals show more precision within a model since genrerally 
 
 
 We have seen how to model the coefficients and the confidence intervals, what about the data we predict?
-Often when working with data in ecology, we want to predict what our future model might look like
-So far, we have plotted confidence intervals for the model parameters - the intercept and slope
+Often when working with data in ecology, we want to predict what our future model might look like.
+So far, we have plotted confidence intervals for the model parameters - the intercept and slope.
 You might be thinking but what about future predictions?
 Good question, lets find out!!
 
 R has a prediction function within the `ggeffects` package. We can find confidence levels in future predictions.
 
 ```r
+library(ggeffects)
+# install.packages("ggeffects") # uncomment this code if you haven't installed the package yet!
+
 # Extract the prediction data frame
 pred_m <- ggpredict(model, terms = c("Height"))  # this gives overall predictions for the Height
 ```
+This gives us predictions for the heights we have values corresponding to.
 
 ```r
 # 95% conf intervals!!
@@ -301,6 +319,7 @@ We may now ask but what is the difference between a confidence interval and a pr
 Good question, lets find out!
 A prediction interval is less certain than a confidence interval. A prediction interval predicts an individual number, whereas a confidence interval predicts the mean value.
 
+Now we will find predictions for heights, we do not have values for in the `trees` data.
 
 ```r
 #create data frame with three new values for height
@@ -358,10 +377,16 @@ ggplot(combined, aes(x = Height, y = Girth)) + #define x and y variables
 
 <center> <img src="{{ site.baseurl }}/figures/Prediction-plot.png" alt="Img" style="width: 800px;"/> </center>
 
-## What do we expect when we move to a 99% prediction interval?
+## Challenge!!
 
-Intuitively, when we more to 99% intervals, we are predicting a larger interval in which there is 99% probability the predicted value lies in thei interval, 
+In this section, we will challenge ourselves to plot both 99% confidence and 99% prediction intervals for ...
+
+#### What do we expect when we move to a 99% prediction interval?
+
+Intuitively, when we move to 99% intervals, we are predicting a larger interval in which there is 99% probability the predicted value lies in the interval, 
 therefore the interval will be LARGER.
+
+I challenge you to find 99% intervals for 
 
 Well done, you've successfully completed the tutorial! 
 
