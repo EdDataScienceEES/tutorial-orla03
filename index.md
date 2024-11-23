@@ -9,6 +9,12 @@
 3. To be able to understand the difference between confidence intervals and prediction intervals.
 4. To be able to use visualisation techniques to interpret the intervals.
 
+### Learning Outcome
+
+I can find confidence intervals and visualise these using `ggplot2`. Further to this, 
+I can then analyse how widths change depending on significance levels.
+
+
 #### <a href="#section1"> 1. Introduction </a>
 ##### <a href="#section1.1"> 1.1 Prerequisites </a>
 ##### <a href="#section1.2"> 1.2 Understanding Confidence Intervals </a>
@@ -72,9 +78,11 @@ Let's load the package and get a basic understanding of the data.
 ```r
 # Load package
 library(ggplot2)
+library(dplyr)
 
 # If you don't have the package installed already, do so by uncommenting the code below
 # install.packages("ggplot2")
+# install.packages("dplyr")
 # This line of code is essential for installing any packages you don't have already!
 
 # Loading data
@@ -308,32 +316,56 @@ This gives us predictions for the heights we have values corresponding to.
 
 ```r
 # 95% conf intervals!!
-ggplot(data = pred_m) +
-  geom_point(aes(x = x, y = predicted), color = "red", size = 2) +
-  geom_errorbar(aes(x = x, ymin = conf.low, ymax = conf.high), width = 0.4, color = "black", size = 0.5)+
-  geom_text(aes(x = x, y = conf.low, label = round(conf.low, 1),  vjust = 1)) +
-  geom_text(aes(x = x, y = conf.high, label = round(conf.high, 1),  vjust = -1)) +
+(ggplot() +
+  geom_point(data = trees, aes(x = Height, y = Girth), color = "darkgreen") +
+  geom_line(data = pred_m, aes(x = x, y = predicted), color = "red") +
+  geom_ribbon(data = pred_m, aes(x = x, ymin = conf.low, ymax = conf.high), 
+              fill = "lightgrey", alpha = 0.5) + # add the 95% confidence intervals 
   theme_minimal() +
-  labs(title = "Confidence Intervals for Model Coefficients",
-       x = "Height", 
-       y = "Prediction")
+    theme_bw() +
+  labs(x = "Height", y = "Tree Girth", 
+       title = "Tree girth is increasing with height"))
 ```
 <center> <img src="{{ site.baseurl }}/figures/Conf-Int-2.png" alt="Img" style="width: 800px;"/> </center>
 
-We may now ask but what is the difference between a confidence interval and a prediction interval?
-Good question, lets find out!
-A prediction interval is less certain than a confidence interval. A prediction interval predicts an individual number, whereas a confidence interval predicts the mean value.
-
-Now we will find predictions for heights, we do not have values for in the `trees` data.
+We will now plot the intervals in an alternative way!
 
 ```r
-#create data frame with three new values for height
+# 95% conf intervals!!
+conf_3 <- (ggplot(data = pred_m) +
+  geom_point(aes(x = x, y = predicted), color = "red", size = 2) + # plot predictions as points
+  geom_errorbar(aes(x = x, ymin = conf.low, ymax = conf.high), # plot the upper and lower conf intervals
+                width = 0.4, color = "black", size = 0.5)+
+  geom_text(aes(x = x, y = conf.low, 
+                label = round(conf.low, 1),  vjust = 1)) + # round to one decimal place and vertically adjust
+  geom_text(aes(x = x, y = conf.high, 
+                label = round(conf.high, 1),  vjust = -1)) +
+  theme_minimal() +
+  labs(title = "Confidence Intervals for Model Coefficients",
+       x = "Height", 
+       y = "Prediction"))
+```
+<center> <img src="{{ site.baseurl }}/figures/Conf-Int-3.png" alt="Img" style="width: 800px;"/> </center>
+
+We may now ask but what is the difference between a confidence interval and a prediction interval?
+Good question, lets find out!
+A prediction interval is less certain than a confidence interval. 
+A prediction interval predicts where possible outcomes will lie, whereas a confidence interval predicts where the true mean will lie.
+
+Now we will find predictions for heights that we do not have values for in the `trees` data.
+
+```r
+#create data frame with five new values for height
 new_height <- data.frame(Height= c(90, 100, 110, 120, 130))
 
 # Use the fitted model to predict the value for Girth based on the three new values for height
 predictions <- predict(model, newdata = new_height, interval = "predict", level = 0.95) # newdata is the new data frame
 
-comb <- data.frame(cbind(new_height,predictions)) # Combine into a single data frame
+# Combine into a single data frame (using pipes)
+comb <- new_height %>%
+  mutate(fit = predictions[, "fit"],      # add the fit column
+    lwr = predictions[, "lwr"],    # add the lwr column
+    upr = predictions[, "upr"])     # add upr column
 ```
 
 This shows us that for a tree with tree height of 90, the predicted tree girth is 16.76 **put in a table
@@ -368,8 +400,11 @@ We will now predict the intervals for our height values from the `trees` datafra
 predictions <- predict(model, newdata = trees, interval = "predict", level = 0.95)
 # 95% prediction interval for Tree girth with a height of 90 is 10.58 to 22.93
 
-# create dataset that contains original data along with prediction intervals
-combined <- cbind(trees, predictions) # Add new column to combined
+# create dataframe that contains original data along with prediction intervals
+combined <- trees %>%
+  mutate(fit = predictions[, "fit"],      # add the fit column
+         lwr = predictions[, "lwr"],    # add the lwr column
+         upr = predictions[, "upr"])  # add upr column
 
 ggplot(combined, aes(x = Height, y = Girth)) + #define x and y variables
   geom_point() + # add raw data points
