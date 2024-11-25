@@ -5,8 +5,8 @@
 ### Tutorial Aims
 
 1. To be able to find confidence intervals corresponding to a simple linear model.
-2. To be able to predict estimates and their corresponding prediction intervals.
-3. To be able to understand the difference between confidence intervals and prediction intervals.
+2. To be able to understand the difference between confidence intervals and prediction intervals.
+3. To be able to predict estimates and find their corresponding prediction intervals.
 4. To be able to use visualisation techniques to interpret the intervals.
 
 ### Learning Outcome
@@ -21,20 +21,24 @@ I can then analyse how widths change depending on significance levels.
 ##### <a href="#section1.3"> 1.3 Introducing the Data </a>
 
 #### <a href="#section2"> 2. Build a Linear Model </a>
-##### <a href="#section2"> 2.1 Construct a confidence Interval </a>
+##### <a href="#section2.1"> 2.1 Construct a confidence Interval </a>
 
 #### <a href="#section3"> 3. Learn how to plot the confidence intervals and compare these.</a>
 
-#### <a href="#section4"> 4. Challenge Yourself!! </a>
+#### <a href="#section4"> 4. Introducing Prediction Intervals </a>
 
+#### <a href="#section5"> 5. Challenge Yourself!! </a>
 
+#### <a href="#section6"> 6. Conclusion </a>
+
+---------------------------
 <a name="section1"></a>
+## 1 Introduction
 
 Often in data science we want to predict where the data might fall. A confidence interval gives us a range of plausible values in which our true value might lie; this is essential in ecologicial data science and often used to assess the importance of true effects!
 
 If you are interested in how to find confidence intervals in R and how to plot these results to better visualise where the true value might lie, this is the tutorial for you!
 
----------------------------
 <a name="section1.1"></a>
 
 ## 1.1 Prerequisites
@@ -103,9 +107,10 @@ The data has 31 observations with 3 different variables: Girth, Height and Volum
 
 We will now begin through this tutorial.
 
-<a name="section2"></a>
-
 <center><img src="{{ site.baseurl }}/images/tree_l.png" alt="Img" style="width: 100%; height: auto;"/></center>
+
+---------------------------
+<a name="section2"></a>
 
 ## 2. Learning how to use linear models and finding their confidence intervals
 
@@ -172,7 +177,7 @@ The model shows the raw data points with a consistent increase in tree girth wit
 
 <a name="section2.1"></a>
 
-## 2.2 Construct a Confidence Interval 
+## 2.1 Construct a Confidence Interval 
 
 We will now find Confidence intervals for our model. R has a built in function to find confidence intervals, however we will manually find these intervals and then test against the function.
 Within data science we generally need an understanding of how to find the mean, standard error, t-score, and margins of error, this step-by-step solution is just the beginning of your statistical analysis!
@@ -252,6 +257,9 @@ be useful to use the`confint` function for plotting or checking our analysis, bu
 For example, using error margins and finding the t-score value proves beneficial depending on the analysis conducted, this is embedded in the `confint` function,
 but being able to extract these by manually finding the interval as we have above is a useful skill!
 
+Before moving on, you should now be able to find confidence intervals for a simple linear model!
+
+---------------------------
 <a name="section3"></a>
 
 ## 3. Learn how to plot the confidence intervals and compare these
@@ -346,6 +354,12 @@ conf_3 <- (ggplot(data = pred_m) +
        y = "Prediction"))
 ```
 <center> <img src="{{ site.baseurl }}/figures/Conf-Int-3.png" alt="Img" style="width: 800px;"/> </center>
+Before moving on, you should now be able to plot confidence intervals for a simple linear model!
+
+---------------------------
+<a name="section4"></a>
+
+## 4 Introducing Prediction Intervals
 
 We may now ask but what is the difference between a confidence interval and a prediction interval?
 Good question, lets find out!
@@ -414,10 +428,11 @@ ggplot(combined, aes(x = Height, y = Girth)) + #define x and y variables
   theme_minimal()
 
 ```
-
 <center> <img src="{{ site.baseurl }}/figures/Prediction-plot.png" alt="Img" style="width: 800px;"/> </center>
 
-<a name="section4"></a>
+Before moving on, you should now be able to find and plot prediction intervals for a simple linear model!
+---------------------------
+<a name="section5"></a>
 ## Challenge!!
 
 Well done for following the basic skills of finding these intervals! 
@@ -425,15 +440,21 @@ Well done for following the basic skills of finding these intervals!
 In this section, we will challenge ourselves to plot both 99% confidence and 95% confidence intervals for the `dragons` data.
 This gives us an opportunity to analyse how the change in size of interval effects the results.
 
-We want to estimate the difference in test scores between the mountain ranges, have a read through the data before you begin and build a linear model (*hint: use a simple linear model!).
+We want to estimate the difference in test scores between the mountain ranges, have a read through the data before you begin and build a linear model (**hint:** use a simple linear model!).
 Once you have constructed a model, build the different confidence intervals and visualise the data to answer the question.
-This data is included within the data folder <a href="https://github.com/EdDataScienceEES/tutorial-orla03/tree/master/data" target="_blank">here</a> 
-- download and load the data before you begin.
+This data is included within the data folder <a href="https://github.com/EdDataScienceEES/tutorial-orla03/tree/master/data" target="_blank">here.</a> 
+An example workflow:
+- Load and read the data
+- Build a simple linear model which helps estimate the difference in test scores.
+- Check the 3 assumptions are not violated.
+- Create dataframes of each confidence interval.
+- Use visualisation techniques to answer the question.
 
 #### Questions to think about before we begin!!
 
-**What do we expect when we move to a 99% from a 95% confidence interval?**
-**What does a larger confidence interval imply?**
+1. What do we expect when we move to a 99% from a 95% confidence interval?
+
+2. What does a larger confidence interval imply?
 
 {% capture reveal %}
 
@@ -491,7 +512,8 @@ This essentially means that there is less precision, higher confidence that the 
 {% endcapture %} 
 {% include reveal.html button="Click for the answer" content=reveal %}
 
-<a name="section5"></a>
+---------------------------
+<a name="section6"></a>
 
 ## Conclusion
 
@@ -499,10 +521,10 @@ Well done, you've successfully completed the tutorial, happy coding!
 
 Hopefully you can now feel confident in your ability to:  
 
-##### - Understand the use of confidence intervals and how to construct them for simple linear models
-##### - Manually find a confidence interval
-##### - Plot regressions and confidence intervals in ggplot2
-##### - Know the difference between confidence and prediction intervals
+##### - Understand the use of confidence intervals and how to construct them for simple linear models.
+##### - understand how to build confidence intervals.
+##### - Plot regressions in ggplot2.
+##### - Know the difference between confidence and prediction intervals.
 
 <center> <img src="{{ site.baseurl }}/images/tree.png" alt="Img" style="width: 500px;"/> </center>
 
