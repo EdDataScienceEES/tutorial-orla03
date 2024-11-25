@@ -443,12 +443,15 @@ This gives us an opportunity to analyse how the change in size of interval effec
 We want to estimate the difference in test scores between the mountain ranges, have a read through the data before you begin and build a linear model (**hint:** use a simple linear model!).
 Once you have constructed a model, build the different confidence intervals and visualise the data to answer the question.
 This data is included within the data folder <a href="https://github.com/EdDataScienceEES/tutorial-orla03/tree/master/data" target="_blank">here.</a> 
-An example workflow:
-- Load and read the data
-- Build a simple linear model which helps estimate the difference in test scores.
-- Check the 3 assumptions are not violated.
-- Create dataframes of each confidence interval.
-- Use visualisation techniques to answer the question.
+
+```r
+# An example workflow:
+#1. Load and read the data
+#2. Build a simple linear model which helps estimate the difference in test scores.
+#3. Check the 3 assumptions are not violated.
+#4. Create dataframes of each confidence interval.
+#5. Use visualisation techniques to answer the question.
+```
 
 #### Questions to think about before we begin!!
 
