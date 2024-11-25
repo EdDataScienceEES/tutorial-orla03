@@ -462,7 +462,7 @@ This data is included within the data folder <a href="https://github.com/EdDataS
 {% capture reveal %}
 
 ```r
-load("dragons.RData") # load the dragons data
+load("data/dragons.RData") # load the dragons data
 dragons$bodyLength2 <- scale(dragons$bodyLength, center = TRUE, scale = TRUE) # scale the body length
 mountain.lm <- lm(testScore ~ bodyLength2 + mountainRange, data = dragons) # construct a linear model
 
@@ -491,16 +491,23 @@ coef_99_data <- data.frame(
   diff = conf_99[,2] - conf_99[,1]) # add the difference         
   
 plot_diff <- (ggplot() +
-             geom_point(data = coef_99_data, aes(x = term, y = estimate), color = "black", size = 2) +
-             geom_errorbar(data = coef_99_data, aes(x = term, ymin = lower, ymax = upper), width = 0.4, color = "red", size = 0.5)+
-             geom_text(data = coef_99_data, aes(x = term, y = estimate, label = round(diff, 1), vjust = -0.8, hjust = -0.2), color = "red") +
-             geom_point(data = coef_95_data, aes(x = term, y = estimate), color = "black", size = 2) +
-             geom_errorbar(data = coef_95_data, aes(x = term, ymin = lower, ymax = upper), width = 0.4, color = "black", size = 0.5)+
-             geom_text(data = coef_95_data, aes(x = term, y = estimate, label = round(diff, 1), vjust = 0.8, hjust = -0.2)) +
+             geom_point(data = coef_99_data, aes(x = term, y = estimate), 
+                        color = "black", size = 2) +
+             geom_errorbar(data = coef_99_data, aes(x = term, ymin = lower, ymax = upper), 
+                           width = 0.4, color = "red", linewidth = 0.5)+
+             geom_text(data = coef_99_data, aes(x = term, y = estimate, label = round(diff, 1), # Plot the 99% CI
+                                                vjust = -0.8, hjust = -0.2), color = "red") +
+             geom_point(data = coef_95_data, aes(x = term, y = estimate), 
+                        color = "black", size = 2) +
+             geom_errorbar(data = coef_95_data, aes(x = term, ymin = lower, ymax = upper), 
+                           width = 0.4, color = "black", linewidth = 0.5)+
+             geom_text(data = coef_95_data, aes(x = term, y = estimate, label = round(diff, 1), # Plot the 95% CI
+                                                vjust = 0.8, hjust = -0.2)) +
              theme_minimal() +
+             theme(axis.text.x = element_text(angle = 45, hjust = 1)) + # angle the labels on x axis for readability
              labs(title = "Confidence Intervals for Model Coefficients",
                   x = "Term", 
-                  y = "Estimate"))
+                  y = "Estimate" ))
 ```
 <center> <img src="{{ site.baseurl }}/figures/Diff-int.png" alt="Img" style="width: 800px;"/> </center>
 
