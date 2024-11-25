@@ -158,7 +158,7 @@ Finally the blue shows the degrees of freedom for our linear model.
 These are the number of independent variables that can vary. For example, in our data set we have 31 observations but 2 independent variables in our model, hence 31 - 2 = 29 df.
 This will prove beneficial in constructing confidence intervals later.
 
-Final note: the Adjusted R-squared is significantly low for our model at 0.2445. This means only 24% of the data is accounted for by this model. Not ideal!
+Final note: the Adjusted R-squared is significantly low for our model at 0.2445. This means only 24% of the variation in the data is explained by this model. Not ideal!
 
 We can now plot the linear model as follows.
 
@@ -240,7 +240,7 @@ print(combined_bounds)
 
 This shows us the lower bound at 2.5% and upper bound and 97.5% (because alpha is 5%!) corresponding to both the intercept and the height.
 
-We will now check our values against the built in r function.
+We will now check our values against the built in R function.
 
 ```r
 # Compare to the built in r function!
@@ -291,7 +291,7 @@ This shows us that the confidence interval for the intercept is much larger than
 
 {% capture reveal %}
 
-Narrow confidence intervals show more precision within a model since genrerally a narrow confidence interval represents a better model due to more precision in the estimates. 
+Narrow confidence intervals show more precision within a model since generally a narrow confidence interval represents a better model due to more precision in the estimates. 
 
 {% endcapture %} 
 {% include reveal.html button="Click for the answer" content=reveal %}
