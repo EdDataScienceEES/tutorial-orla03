@@ -11,8 +11,8 @@
 
 ### Learning Outcome
 
-I can find confidence intervals and visualise these using `ggplot2`. Further to this, 
-I can then analyse how widths change depending on significance levels.
+You can confidence intervals and visualise these using `ggplot2`. Further to this, 
+you can then analyse how widths change depending on significance levels.
 
 
 #### <a href="#section1"> 1. Introduction </a>
@@ -35,7 +35,7 @@ I can then analyse how widths change depending on significance levels.
 <a name="section1"></a>
 ## 1 Introduction
 
-Often in data science we want to predict where the data might fall. A confidence interval gives us a range of plausible values in which our true value might lie; this is essential in ecologicial data science and often used to assess the importance of true effects!
+Often in data science we want to predict where the data might fall. A confidence interval gives us a range of plausible values in which our true parameter might lie; this is essential in ecologicial data science and often used to assess the importance of true effects!
 
 If you are interested in how to find confidence intervals in R and how to plot these results to better visualise where the true value might lie, this is the tutorial for you!
 
@@ -54,7 +54,7 @@ The following tutorials may be useful:
 
 You can get all of the resources for this tutorial from <a href="https://github.com/EdDataScienceEES/tutorial-orla03" target="_blank">this GitHub repository</a>. Clone and download the repo as a zip file, then unzip it.
 
-Having a basic understanding of `ggplot2` will be super beneficial. However, do not worry if you are only a beginner with R language, we will address each step as we make our way through this tutorial.
+Having a basic understanding of `ggplot2` will be beneficial. However, do not worry if you are only a beginner with R language, we will address each step as we make our way through this tutorial.
 
 <a name="section1.2"></a>
 
@@ -365,7 +365,7 @@ We may now ask but what is the difference between a confidence interval and a pr
 Good question, lets find out!
 A prediction interval is less certain than a confidence interval. 
 A prediction interval predicts where possible outcomes will lie, whereas a confidence interval predicts where the true mean will lie.
-
+As a consequence, a prediction interval will be **wider** than a confidence interval.
 Now we will find predictions for heights that we do not have values for in the `trees` data.
 
 ```r
@@ -382,7 +382,8 @@ comb <- new_height %>%
     upr = predictions[, "upr"])     # add upr column
 ```
 
-This shows us that for a tree with tree height of 90, the predicted tree girth is 16.76 **put in a table
+Now print the output, remember to use brackets or call the data-frame! 
+This shows us that for a tree with tree height of 90 feet, the predicted tree girth is 16 inches. The interpretation follows for the other heights.
 
 We can now plot these prediction intervals using the skills we learnt in section 3.
 

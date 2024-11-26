@@ -57,10 +57,12 @@ plot_diff <- (ggplot() +
              geom_text(data = coef_95_data, aes(x = term, y = estimate, label = round(diff, 1), # Plot the 95% CI
                                                 vjust = 0.8, hjust = -0.2)) +
              theme_minimal() +
+             theme_bw() +
              theme(axis.text.x = element_text(angle = 45, hjust = 1)) + # angle the labels on x axis for readability
              labs(title = "Confidence Intervals for Model Coefficients",
                   x = "Term", 
                   y = "Estimate" ))
+plot_diff
 
 ggsave("figures/Diff-int.png", 
        plot = plot_diff, 
