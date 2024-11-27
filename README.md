@@ -8,7 +8,7 @@ __Tutorial Resources:__
 
 The tutorial webpage can be accessed [here.](https://eddatascienceees.github.io/tutorial-orla03/)
 
-The pdf can be found [here.](https://eddatascienceees.github.io/tutorial-orla03/tree/master/pdf)
+The pdf can be found [here.](https://github.com/EdDataScienceEES/tutorial-orla03/tree/master/pdf)
 
 Please note that the solution to the challenge and a few of the questions throughout the tutorial can be found by clicking on the `Click for the answer button.` this may not be clear via the pdf.
 
