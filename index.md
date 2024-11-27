@@ -11,7 +11,7 @@
 
 ### Learning Outcome
 
-You can confidence intervals and visualise these using `ggplot2`. Further to this, 
+You can find confidence intervals and visualise these using `ggplot2`. Further to this, 
 you can then analyse how widths change depending on significance levels.
 
 
@@ -33,11 +33,12 @@ you can then analyse how widths change depending on significance levels.
 
 ---------------------------
 <a name="section1"></a>
-## 1 Introduction
+## 1. Introduction
 
 Often in data science we want to predict where the data might fall. A confidence interval gives us a range of plausible values in which our true parameter might lie; this is essential in ecologicial data science and often used to assess the importance of true effects!
 
-If you are interested in how to find confidence intervals in R and how to plot these results to better visualise where the true value might lie, this is the tutorial for you!
+If you are interested in how to find confidence intervals in R and how to plot these results to better visualise where the true value might lie, this is the tutorial for you! We will look at constructing intervals and plotting our results, all of which are essential when working with real world
+ecological data.
 
 <a name="section1.1"></a>
 
@@ -146,7 +147,7 @@ For the purpose of this tutorial, we are not focussing on improving our linear m
 Head to the following tutorial for a thorough guide on how to improve this basic model.
 ###### <a href="https://ourcodingclub.github.io/tutorials/model-design/"> Intro to Model Design</a>
 
-Continuing on we will analyse the models summary. In r it is **always** a good idea to have a look at the summary to evaluate linear models.
+Continuing on, we will analyse the models summary. In R it is **always** a good idea to have a look at the summary to evaluate linear models.
 
 ```r
 summary(model) # Print the summary of our model
@@ -188,18 +189,18 @@ Learning how to construct a confidence interval in essential in ecology, as we o
 # We will print the summary of our model then extract the relevant information
 (sum_m <- summary(model))
 # remember if we put brackets around the line of code, the results will be printed, otherwise
-# we call call the function by printing the name!
+# we can call the function by printing the name!
 
-# We extract the models coeeficients from the estimates in our summary 
+# Extract the models coeeficients from the estimates in our summary 
 model_est <- coef(model)
 
-# We extract the standard errors
+# Extract the standard errors
 model_se <- sum_m$coefficients[, 2]  # the use of 2 takes us to the coeffecients then the 2nd column
 
-# We now find our sample size
+# Find our sample size
 sample <- length(trees$Girth)
 
-# We now find the degrees of freedom
+# Find the degrees of freedom
 # In a simple linear regression model with one predictor variable, 
 # the degrees of freedom is calculated as n – 2, where n is the total number of observations.
 
@@ -209,12 +210,12 @@ degrees_freedom
 Correct! The degrees of freedom match our summary!
 
 We will now introduce significance levels; these are highly important and coherent with the level chosen as alpha. 
-For example, when computing a 95% confidence interval, this suggests our value of alpha will be 5% and the associated
+For example, when computing a (two-sided) 95% confidence interval, this suggests that our value of alpha will be 5% and the associated
 confidence interval output will give us a numerical value for the data at 2.5% and 97.5%, this is known as a two-sided confidence interval.
 In ecology, we often use a two-sided confidence interval rather than a one-sided confidence interval as we generally want
 an upper and a lower bound, this has less limitations.
 
-Don't worry too much here, R has a default of 95% level.
+Don't worry too much here, R has a default of 95% significance level.
 
 We will understand mathematically the formula for a Confidence Interval, this will help with construction in R.
 
@@ -222,7 +223,7 @@ We will understand mathematically the formula for a Confidence Interval, this wi
 
 ```r
 # Calculate t-score for 95% confidence interval
-# We use the qt function here, this is a form of testine method for our model!
+# We use the qt function here, this is a form of a testing method for our model!
 alpha <- 0.05 # alpha is 0.05 for a 95% conf interval
 score <- qt(p = alpha / 2, df = degrees_freedom, lower.tail = FALSE)
 
@@ -325,8 +326,8 @@ This gives us predictions for the heights we have values corresponding to.
 ```r
 # 95% conf intervals!!
 (ggplot() +
-  geom_point(data = trees, aes(x = Height, y = Girth), color = "darkgreen") +
-  geom_line(data = pred_m, aes(x = x, y = predicted), color = "red") +
+  geom_point(data = trees, aes(x = Height, y = Girth), color = "darkgreen") + # Plot raw data points
+  geom_line(data = pred_m, aes(x = x, y = predicted), color = "red") + # Add the regression line
   geom_ribbon(data = pred_m, aes(x = x, ymin = conf.low, ymax = conf.high), 
               fill = "lightgrey", alpha = 0.5) + # add the 95% confidence intervals 
   theme_minimal() +
@@ -359,10 +360,11 @@ Before moving on, you should now be able to plot confidence intervals for a simp
 ---------------------------
 <a name="section4"></a>
 
-## 4 Introducing Prediction Intervals
+## 4. Introducing Prediction Intervals
 
 We may now ask but what is the difference between a confidence interval and a prediction interval?
 Good question, lets find out!
+
 A prediction interval is less certain than a confidence interval. 
 A prediction interval predicts where possible outcomes will lie, whereas a confidence interval predicts where the true mean will lie.
 As a consequence, a prediction interval will be **wider** than a confidence interval.
@@ -372,7 +374,8 @@ Now we will find predictions for heights that we do not have values for in the `
 #create data frame with five new values for height
 new_height <- data.frame(Height= c(90, 100, 110, 120, 130))
 
-# Use the fitted model to predict the value for Girth based on the three new values for height
+# Use the fitted model to predict the value for Girth based on the five new values for height
+# prediction significance level of 95%
 predictions <- predict(model, newdata = new_height, interval = "predict", level = 0.95) # newdata is the new data frame
 
 # Combine into a single data frame (using pipes)
@@ -392,7 +395,7 @@ We can now plot these prediction intervals using the skills we learnt in section
                 geom_point(aes(x = Height, y = fit), color = "deeppink", size = 2) + # plot the points
                 geom_errorbar(aes(x = Height, ymin = lwr, ymax = upr), width = 0.4, color = "black", size = 0.5)+ # point the bars
                 geom_text(aes(x = Height, y = lwr, label = round(lwr, 1),  vjust = 1)) +
-                geom_text(aes(x = Height, y = upr, label = round(upr, 1),  vjust = -1)) +
+                geom_text(aes(x = Height, y = upr, label = round(upr, 1),  vjust = -1)) + # Add the interval values
                 ylim(0, 40) + 
                 xlim(80,140) + # added scale limits
                 theme_minimal() +
@@ -412,7 +415,7 @@ We will now predict the intervals for our height values from the `trees` datafra
 
 ```r
 # create the prediction intervals
-predictions <- predict(model, newdata = trees, interval = "predict", level = 0.95)
+predictions <- predict(model, newdata = trees, interval = "predict", level = 0.95) # newdata is back to original trees
 # 95% prediction interval for Tree girth with a height of 90 is 10.58 to 22.93
 
 # create dataframe that contains original data along with prediction intervals
@@ -432,13 +435,14 @@ ggplot(combined, aes(x = Height, y = Girth)) + #define x and y variables
 <center> <img src="{{ site.baseurl }}/figures/Prediction-plot.png" alt="Img" style="width: 800px;"/> </center>
 
 Before moving on, you should now be able to find and plot prediction intervals for a simple linear model!
+
 ---------------------------
 <a name="section5"></a>
 ## Challenge!!
 
 Well done for following the basic skills of finding these intervals! 
 
-In this section, we will challenge ourselves to plot both 99% confidence and 95% confidence intervals for the `dragons` data.
+In this section, we will challenge ourselves to plot both 99% confidence and 95% confidence intervals for the `dragons` data as used in this [tutorial.](https://ourcodingclub.github.io/tutorials/mixed-models/).
 This gives us an opportunity to analyse how the change in size of interval effects the results.
 
 We want to estimate the difference in test scores between the mountain ranges, have a read through the data before you begin and build a linear model (**hint:** use a simple linear model!).
@@ -493,15 +497,15 @@ coef_99_data <- data.frame(
   
 plot_diff <- (ggplot() +
              geom_point(data = coef_99_data, aes(x = term, y = estimate), 
-                        color = "black", size = 2) +
+                        color = "black", size = 2) + # model estimates
              geom_errorbar(data = coef_99_data, aes(x = term, ymin = lower, ymax = upper), 
-                           width = 0.4, color = "red", linewidth = 0.5)+
+                           width = 0.4, color = "red", linewidth = 0.5)+ # upper/lower bounds 99%
              geom_text(data = coef_99_data, aes(x = term, y = estimate, label = round(diff, 1), # Plot the 99% CI
                                                 vjust = -0.8, hjust = -0.2), color = "red") +
              geom_point(data = coef_95_data, aes(x = term, y = estimate), 
-                        color = "black", size = 2) +
+                        color = "black", size = 2) + # model estimates
              geom_errorbar(data = coef_95_data, aes(x = term, ymin = lower, ymax = upper), 
-                           width = 0.4, color = "black", linewidth = 0.5)+
+                           width = 0.4, color = "black", linewidth = 0.5)+ # upper/lower bounds 95%
              geom_text(data = coef_95_data, aes(x = term, y = estimate, label = round(diff, 1), # Plot the 95% CI
                                                 vjust = 0.8, hjust = -0.2)) +
              theme_minimal() +
